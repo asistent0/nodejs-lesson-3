@@ -22,7 +22,10 @@ request('http://www.volzsky.ru/', function (error, response, html) {
 
     $('a.morda').each(function (i, img) {
                     string[i] = $(img).text().trim() + '<br>';
+
     });
+
+    string = string.join('');
 });
 
 http.createServer(function (request, response) {
