@@ -20,18 +20,18 @@ request('https://geekbrains.ru/posts', function (error, response, html) {
 
     var $ = cheerio.load(html);
 
-    $('div.col-sm-6.col-md-4.col-xs-6.event.search_row').each(function (i, img) {
-        $(img).find($('.text-dark')).parent('a').attr('target','_blank');
+    $('div.col-sm-6.col-md-4.col-xs-6.event.search_row').each(function (i, element) {
+        $(element).find($('.text-dark')).parent('a').attr('target','_blank');
 
-            string[i] = $(img).find($('.img_preview')) + '<br>' +
-                $(img).find($('.text-dark')).parent('a') + '<br>' +
-                $(img).find($('div.m-t-sm')).next() + '<br>';
+            string[i] = $(element).find($('.img_preview')) + '<br>' +
+                $(element).find($('.text-dark')).parent('a') + '<br>' +
+                $(element).find($('div.m-t-sm')).next() + '<br>';
 
             return (i !== 10);
 
     });
 
-    string = string.join('').replace("/posts/", "https://geekbrains.ru/posts/");
+    string = string.join('').replace(new RegExp("/posts/",'g'), "https://geekbrains.ru/posts/");
 });
 
 http.createServer(function (request, response) {
@@ -42,5 +42,5 @@ http.createServer(function (request, response) {
     response.write(string);
     response.end();
 }).listen(PORT, function () {
-    console.log("Let's get started: ", PORT);
+    console.log("Let's get started: http://localhost:" + PORT);
 });
