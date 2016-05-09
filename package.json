@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node server.js",
-    "server2": "node server2.js"
+    "server2": "node server2.js",
+    "trans": "node translate.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "dependencies": {
     "cheerio": "^0.20.0",
     "iconv": "^2.2.0",
-    "request": "^2.72.0"
+    "request": "^2.72.0",
+    "url": "^0.11.0"
   }
 }
