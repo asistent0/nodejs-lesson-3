@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yandex Translate</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>Yandex Переводчик</h1>
+    </div>
+    <p class="lead"><textarea id="area" cols="102" rows="10" placeholder="Введите текст на английском"></textarea></p>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">
+            <button id="button" class="btn btn-default">Перевести</button>
+            <div></div>
+        </p>
+        <div id="alert" class="alert alert-info" role="alert"></div>
+    </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        var $button = $('#button');
+        var $area = $('#area');
+        var $alert = $('#alert');
+        $alert.hide();
+        $button.click(function () {
+            if ($area.val() == '') {
+                $alert.text('');
+                $alert.hide();
+                return 0;
+            }
+            $button.prop('disabled', true);
+            $button.text('Загрузка...');
+            $alert.hide();
+            $.getJSON('ajax?text=' + $area.val(), function (data) {
+                if (data.status === 'success') {
+                    $button.text('Перевести');
+                    $alert.text(data.msg);
+                    $alert.show();
+                    $button.prop('disabled', false);
+                    return 0;
+                } else {
+                    alert(data.message);
+                    $button.text('Ошибка перевода');
+                    return 0;
+                }
+            }).fail(function () {
+                $button.prop('disabled', false);
+                $button.text('Перевести');
+                alert('Ошибка перевода');
+            })
+        })
+    })
+</script>
+</body>
+</html>
