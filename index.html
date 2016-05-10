@@ -19,51 +19,54 @@
     </div>
     <p class="lead"><textarea id="area" cols="102" rows="10" placeholder="Введите текст на английском"></textarea></p>
 </div>
-
-<footer class="footer">
-    <div class="container">
-        <p class="text-muted">
-            <button id="button" class="btn btn-default">Перевести</button>
-            <div></div>
-        </p>
-        <div id="alert" class="alert alert-info" role="alert"></div>
-    </div>
-</footer>
+<div class="container">
+    <p class="text-muted">
+        <button id="button" class="btn btn-default">Перевести</button>
+    </p>
+    <div id="error" class="alert alert-danger"></div>
+    <div id="alert" class="alert alert-info" role="alert"></div>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
-    $(function () {
-        var $button = $('#button');
-        var $area = $('#area');
-        var $alert = $('#alert');
-        $alert.hide();
-        $button.click(function () {
-            if ($area.val() == '') {
-                $alert.text('');
-                $alert.hide();
+    var button = $('#button');
+    var area = $('#area');
+    var alertInfo = $('#alert');
+    var alertError = $('#error');
+
+    alertInfo.hide();
+    alertError.hide();
+
+    button.click(function () {
+        if (area.val() == '') {
+            alertInfo.hide().text('');
+            alertError.show().text('Введите текст');
+            return;
+        }
+
+        button.prop('disabled', true).text('Загрузка...');
+
+        $.getJSON('trans?text=' + area.val(), function (data) {
+            if (data.status === 'success') {
+
+                alertInfo.show().text(data.msg);
+                alertError.hide();
+                button.prop('disabled', false).text('Перевести');
                 return 0;
+
+            } else {
+
+                alertError.show().text(data.message);
+                button.text('Ошибка перевода');
+                return 0;
+
             }
-            $button.prop('disabled', true);
-            $button.text('Загрузка...');
-            $alert.hide();
-            $.getJSON('ajax?text=' + $area.val(), function (data) {
-                if (data.status === 'success') {
-                    $button.text('Перевести');
-                    $alert.text(data.msg);
-                    $alert.show();
-                    $button.prop('disabled', false);
-                    return 0;
-                } else {
-                    alert(data.message);
-                    $button.text('Ошибка перевода');
-                    return 0;
-                }
-            }).fail(function () {
-                $button.prop('disabled', false);
-                $button.text('Перевести');
-                alert('Ошибка перевода');
-            })
+        }).fail(function () {
+
+            button.prop('disabled', false).text('Перевести');
+            alertError.show().text('Ошибка перевода');
+
         })
     })
 </script>
